@@ -44,9 +44,12 @@ jobs:
           path: dist/doma_launcher.exe
           if-no-files-found: error
       - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.2.0' }}
+          name: doma_launcher ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.2.0' }}
+          make_latest: true
           files: |
             installer/Output/doma_launcher_setup.exe
             dist/doma_launcher.exe
